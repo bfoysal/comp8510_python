@@ -16,16 +16,19 @@ def getPointsArray(inputFile):
 def createInputMatrix(locations2D, locations3D):
     matrixA = []
     vectorM = []
+    #looping through points array to create matrix A. this will create a 2nX12 matrix
     for i in range(len(locations2D)):
-        p3D = locations3D[i]
+        p3D = locations3D[i] 
         p2D  = locations2D[i]
+        
         matrixA.append([-p3D[0],-p3D[1],-p3D[2],-1,0,0,0,0,p2D[0]*p3D[0],p2D[0]*p3D[1],p2D[0]*p3D[2],p2D[0]])
         matrixA.append([0,0,0,0,-p3D[0],-p3D[1],-p3D[2],-1,p2D[1]*p3D[0],p2D[1]*p3D[1],p2D[1]*p3D[2],p2D[1]])
+
         vectorM.append("m"+str(i))
     return (matrixA,vectorM)
 
 def compute2Dpoints(calibrationMatrix,point3D):
-    #calculate 2D points
+    #calculate 2D points from the calibration matrix and 3D points
     m0 = calibrationMatrix[0]
     m1 = calibrationMatrix[1]
     m2 = calibrationMatrix[2]
@@ -34,35 +37,40 @@ def compute2Dpoints(calibrationMatrix,point3D):
     return u,v
 
 def computeError(origPoints,computedPoints):
-    #compute euclidean distance
+    #compute euclidean distance to measure error
     return math.sqrt(((computedPoints[0]-origPoints[0])**2)+((computedPoints[1]-origPoints[1])**2))
 
 if __name__ == "__main__":
+    # input file source path
     source_path = "/mnt/3A0F13EC43ACDB83/workspace/repos/comp8510/"
     datasets=["2D.txt","3D.txt"]
-    # for dataset in datasets:
-    #     print(getMatrices(source_path+dataset+".txt"))
+    
+    #creating array of 2D 3D points
     points2D = getPointsArray(source_path+datasets[0])
     points3D = getPointsArray(source_path+datasets[1])
+    
+    #creating input matrix A for SVD
     matrixA,vectorM = createInputMatrix(points2D,points3D)
-    # print(matrixA)
-    # print(vectorM)
+    
+    #running svd routine on matrixA
     U, s, vt = svd(matrixA)
-    # print(s)
-    # print(vt)
+    
+    #getting the minimum eigen value from eigen value vector s
     minEigenValue = np.argmin(s)
-    # print(minEigenValue)
-    # print(vt[minEigenValue])
+    
+    #selecting and transforming eigen vector corresponding to the minimum eigen value
     calibrationMatrix = vt[minEigenValue].reshape(3,4)
-    print("calibration matrix: \n",calibrationMatrix)
-    # print(eigenMatrix[0])
-    # print(eigenMatrix[0][0])
+
+    print("Calibration matrix: \n",calibrationMatrix)
+    
+    #computing 2D points using the calibration matrix and 3D points as input
     computed2Dpoints = []
     errorValues = []
     for i in range(len(points3D)):
         u,v = compute2Dpoints(calibrationMatrix,points3D[i])
         computed2Dpoints.append([u,v])
         errorValues.append(computeError(points2D[i],[u,v]))
-    # print(computed2Dpoints)
+        
+    #computing avg error value
     avgError = sum(errorValues)/len(points2D)
     print("Average error: \n",avgError)
