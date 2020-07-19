@@ -8,6 +8,7 @@ from PIL import ImageTk, Image
 def img1ClickHandler(event):
     if len(imgPoints1)<10:
         x,y = event.x,event.y
+        print("first: ",x,y)
         imgPoints1.append([x,y])
         canvas1.create_oval(x-5,y-5,x+5,y+5,fill=dot_color, tags='dots')
     # print("img1:",imgPoints1)
@@ -19,6 +20,7 @@ def img1ClickHandler(event):
 def img2ClickHandler(event):
     if len(imgPoints2)<10:
         x,y = event.x,event.y
+        print("second: ",x,y)
         imgPoints2.append([x,y])
         canvas2.create_oval(x-5,y-5,x+5,y+5,fill=dot_color, tags='dots')
     # print("img2:",imgPoints2)
@@ -53,16 +55,17 @@ def computeEpipolarPoints(u,v):
     u1 = -(0*(v*f2[0]+v*f2[1]+f2[2])+u*f3[0]+v*f3[1]+f3[2])/(u*f1[0]+v*f1[1]+f1[2])
     u2 = -(1080*(v*f2[0]+v*f2[1]+f2[2])+u*f3[0]+v*f3[1]+f3[2])/(u*f1[0]+v*f1[1]+f1[2])
     return u1,0,u2,1080
+    
 def drawEpipolarLine(u,v):
     u1,v1,u2,v2 = computeEpipolarPoints(u,v)
-    canvas2.create_line(u1,v1,u2,v2,fill='green',width=5)
+    canvas2.create_line(u1,v1,u2,v2,fill='red',width=5)
 def selectImg1():
     imgPoints1.clear()
     imgPoints2.clear()
     epipolarMode.set(False)
     modeChk.state(['disabled'])
     # global img1Url
-    img1Url = filedialog.askopenfilename(initialdir="/home/burhan/",title="Select 1st image",filetypes=(("jpg files","*.jpg"),("all files","*.*")))
+    img1Url = filedialog.askopenfilename(initialdir=imageDir,title="Select 1st image",filetypes=(("jpg files","*.jpg"),("all files","*.*")))
     canvas1.img = ImageTk.PhotoImage(Image.open(img1Url).resize((1920,1080)))
     canvas1.create_image(0, 0, image=canvas1.img, anchor="nw")
 def selectImg2():
@@ -71,11 +74,12 @@ def selectImg2():
     epipolarMode.set(False)
     modeChk.state(['disabled'])
     # global img2Url
-    img2Url = filedialog.askopenfilename(initialdir="/home/burhan/",title="Select 2nd image",filetypes=(("jpg files","*.jpg"),("all files","*.*")))
+    img2Url = filedialog.askopenfilename(initialdir=imageDir,title="Select 2nd image",filetypes=(("jpg files","*.jpg"),("all files","*.*")))
     canvas2.img = ImageTk.PhotoImage(Image.open(img2Url).resize((1920,1080)))
     canvas2.create_image(0, 0, image=canvas2.img, anchor="nw")
 
 if __name__ == "__main__":
+    imageDir = "/home/burhan/Desktop/"
     imgPoints1 = []
     imgPoints2 = []
     matrixA = []
