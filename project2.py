@@ -6,11 +6,11 @@ from tkinter import filedialog
 from PIL import ImageTk, Image
 
 def img1ClickHandler(event):
-    if len(imgPoints1)<10:
-        x,y = event.x,event.y
-        print("first: ",x,y)
-        imgPoints1.append([x,y])
-        canvas1.create_oval(x-5,y-5,x+5,y+5,fill=dot_color, tags='dots')
+    # if len(imgPoints1)<10:
+    #     x,y = event.x,event.y
+    #     print("first: ",x,y)
+    #     imgPoints1.append([x,y])
+    #     canvas1.create_oval(x-5,y-5,x+5,y+5,fill=dot_color, tags='dots')
     # print("img1:",imgPoints1)
     if len(imgPoints1) == 10 and len(imgPoints2) == 10:
         modeChk.state(['!disabled'])
@@ -20,11 +20,11 @@ def img1ClickHandler(event):
         drawEpipolarLine(x,y)
     
 def img2ClickHandler(event):
-    if len(imgPoints2)<10:
-        x,y = event.x,event.y
-        print("second: ",x,y)
-        imgPoints2.append([x,y])
-        canvas2.create_oval(x-5,y-5,x+5,y+5,fill=dot_color, tags='dots')
+    # if len(imgPoints2)<10:
+    #     x,y = event.x,event.y
+    #     print("second: ",x,y)
+    #     imgPoints2.append([x,y])
+    #     canvas2.create_oval(x-5,y-5,x+5,y+5,fill=dot_color, tags='dots')
     # print("img2:",imgPoints2)
     if len(imgPoints1) == 10 and len(imgPoints2) == 10:
         modeChk.state(['!disabled'])
@@ -66,7 +66,7 @@ def selectImg1():
     imgPoints1.clear()
     imgPoints2.clear()
     epipolarMode.set(False)
-    modeChk.state(['disabled'])
+    # modeChk.state(['disabled'])
     # global img1Url
     img1Url = filedialog.askopenfilename(initialdir=imageDir,title="Select 1st image",filetypes=(("jpg files","*.jpg"),("all files","*.*")))
     canvas1.img = ImageTk.PhotoImage(Image.open(img1Url).resize((1920,1080)))
@@ -75,7 +75,7 @@ def selectImg2():
     imgPoints1.clear()
     imgPoints2.clear()
     epipolarMode.set(False)
-    modeChk.state(['disabled'])
+    # modeChk.state(['disabled'])
     # global img2Url
     img2Url = filedialog.askopenfilename(initialdir=imageDir,title="Select 2nd image",filetypes=(("jpg files","*.jpg"),("all files","*.*")))
     canvas2.img = ImageTk.PhotoImage(Image.open(img2Url).resize((1920,1080)))
@@ -117,12 +117,13 @@ if __name__ == "__main__":
 
     epipolarMode = BooleanVar()
     modeChk = ttk.Checkbutton(frame3, text="Epiploar Mode", variable=epipolarMode)
-    modeChk.config(command = computeFundamentalMatrix)
+    # modeChk.config(command = computeFundamentalMatrix)
 
     modeChk.pack() 
-    if len(imgPoints1) < 10 or len(imgPoints2) < 10:
-        modeChk.state(['disabled'])
-
+    # if len(imgPoints1) < 10 or len(imgPoints2) < 10:
+    #     modeChk.state(['disabled'])
+    # global matrixF
+    matrixF = [[-2.78119151e-08, -6.59734003e-06,  5.16262124e-03],[ 2.58666671e-06,  2.74851330e-07, -1.46301729e-01],[-6.10334920e-03,  1.49293048e-01,  9.77877030e-01]]
 
     main_window.mainloop()
     # print("img1:",imgPoints1)
