@@ -124,7 +124,7 @@ def drawEpipolarLine(u,v):
         # print(p)
         # print(computeZNCC(img1,img2,int(u),int(v),int(p[0]),int(p[1]),50))
         # canvas2.create_text(p[0],p[1],fill='red',font="Times 12",text="X")
-        zncc = computeZNCC(img1,img2,int(u),int(v),int(p[0]),int(p[1]),10)
+        zncc = computeZNCC(img1,img2,int(u),int(v),int(p[0]),int(p[1]),4)
         if(maxZNCC<zncc[0]):
             maxZNCC = zncc[0]
             matchedPixel = p
